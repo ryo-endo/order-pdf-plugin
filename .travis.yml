@@ -60,3 +60,4 @@ after_script:
   - php app/console plugin:develop uninstall --code=${PLUGIN_CODE}
   - wget https://scrutinizer-ci.com/ocular.phar
   - php ocular.phar code-coverage:upload --format=php-clover coverage.clover
+  
