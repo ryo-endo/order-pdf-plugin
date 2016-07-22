@@ -154,7 +154,13 @@ class OrderPdfService extends AbstractFPDIService
         $this->setDefaultData($formData);
 
         // テンプレートファイルを読み込む
-        $templateFilePath = __DIR__.self::PDF_TEMPLATE_FILE_PATH;
+        // app配下のテンプレートファイルを優先して読み込む
+        $templateFilePath = $this->app['config']['root_dir'];
+        $templateFilePath .= '/app/template/admin/OrderPdf/nouhinsyo1.pdf';
+        if (!file_exists($templateFilePath)) {
+            // テンプレートファイルを読み込む
+            $templateFilePath = __DIR__.self::PDF_TEMPLATE_FILE_PATH;
+        }
         $this->setSourceFile($templateFilePath);
 
         foreach ($ids as $id) {
@@ -287,7 +293,12 @@ class OrderPdfService extends AbstractFPDIService
             $this->lfText(125, 83, $text, 8);      // Email
         }
         // ロゴ画像
-        $logoFilePath = __DIR__.'/../Resource/template/logo.png';
+        // app配下のテンプレートファイルを優先して読み込む
+        $logoFilePath = $this->app['config']['root_dir'];
+        $logoFilePath .= '/app/template/admin/OrderPdf/logo.png';
+        if (!file_exists($logoFilePath)) {
+            $logoFilePath =  __DIR__ . '/../Resource/template/admin/OrderPdf/logo.png';
+        }
         $this->Image($logoFilePath, 124, 46, 40);
     }
 
