@@ -34,8 +34,8 @@ class PluginManager extends AbstractPluginManager
      */
     public function install($config, $app)
     {
-        // Backup logo.
-        $this->copyLogo($app['config'], $config['code'], $config['const']);
+        $this->copyFile($app['config'], $config['code'], $config['const']['logo_file']);
+        $this->copyFile($app['config'], $config['code'], $config['const']['pdf_file']);
     }
 
     /**
@@ -47,7 +47,8 @@ class PluginManager extends AbstractPluginManager
     public function uninstall($config, $app)
     {
         // Remove temp
-        $this->removeLogo($app['config'], $config['code'], $config['const']);
+        $this->removeLogo($app['config'], $config['code'], $config['const']['logo_file']);
+        $this->removeLogo($app['config'], $config['code'], $config['const']['pdf_file']);
 
         $this->migrationSchema($app, __DIR__.'/Resource/doctrine/migration', $config['code'], 0);
     }
@@ -81,23 +82,24 @@ class PluginManager extends AbstractPluginManager
      */
     public function update($config, $app)
     {
-        $this->copyLogo($app['config'], $config['code'], $config['const']);
+        $this->copyFile($app['config'], $config['code'], $config['const']['logo_file']);
+        $this->copyFile($app['config'], $config['code'], $config['const']['pdf_file']);
 
         // Update
         $this->migrationSchema($app, __DIR__.'/Resource/doctrine/migration', $config['code']);
     }
 
     /**
-     * Backup logo before update.
+     * ファイルをapp/templateにコピーする.
      *
-     * @param array $config
+     * @param array  $config
      * @param string $pluginCode
-     * @param array $constants
+     * @param string $fileName
      */
-    private function copyLogo($config, $pluginCode, $constants)
+    private function copyFile($config, $pluginCode, $fileName)
     {
-        $src = $this->getPluginTemplateDir().'/'.$constants['logo_file'];
-        $target = $this->getAppTemplateDir($config).'/'.$pluginCode.'/'.$constants['logo_file'];
+        $src = $this->getPluginTemplateDir().'/'.$fileName;
+        $target = $this->getAppTemplateDir($config).'/'.$pluginCode.'/'.$fileName;
 
         // コピー先にすでにファイルが存在する場合は、ユーザーが変更したロゴ画像を残すために上書きをしない
         if (file_exists($target) || !file_exists($src)) {
@@ -109,15 +111,15 @@ class PluginManager extends AbstractPluginManager
     }
 
     /**
-     * Remove logo.
+     * インストール時app/templateにコピーしたファイルを削除する.
      *
      * @param array  $config
      * @param string $pluginCode
-     * @param array $constants
+     * @param string $fileName
      */
-    private function removeLogo($config, $pluginCode, $constants)
+    private function removeLogo($config, $pluginCode, $fileName)
     {
-        $target = $this->getAppTemplateDir($config).'/'.$pluginCode.'/'.$constants['logo_file'];
+        $target = $this->getAppTemplateDir($config).'/'.$pluginCode.'/'.$fileName;
 
         if (!file_exists($target)) {
             return;
