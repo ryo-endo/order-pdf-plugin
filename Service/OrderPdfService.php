@@ -39,8 +39,11 @@ class OrderPdfService extends AbstractFPDIService
     /** FONT 明朝 */
     const FONT_SJIS = 'kozminproregular';
 
-    /** PDFテンプレートファイル名 */
-    const PDF_TEMPLATE_FILE_PATH = '/../Resource/template/nouhinsyo1.pdf';
+    /** PDFテンプレートファイル パス */
+    const PDF_TEMPLATE_FILE_NAME = 'nouhinsyo1.pdf';
+
+    /** ロゴ画像テンプレートファイル名 */
+    const LOGO_IMG_FILE_NAME = 'logo.png';
 
     // ====================================
     // 変数宣言
@@ -153,14 +156,10 @@ class OrderPdfService extends AbstractFPDIService
         // 空文字列の場合のデフォルトメッセージを設定する
         $this->setDefaultData($formData);
 
-        // テンプレートファイルを読み込む
-        // app配下のテンプレートファイルを優先して読み込む
-        $templateFilePath = $this->app['config']['root_dir'];
-        $templateFilePath .= '/app/template/admin/OrderPdf/nouhinsyo1.pdf';
-        if (!file_exists($templateFilePath)) {
-            // テンプレートファイルを読み込む
-            $templateFilePath = __DIR__.self::PDF_TEMPLATE_FILE_PATH;
-        }
+        // テンプレートファイルを読み込む(app配下のテンプレートファイルを優先して読み込む)
+        $originalPath = __DIR__.'/../Resource/template/'.self::PDF_TEMPLATE_FILE_NAME;
+        $userPath = $this->app['config']['template_realdir'].'/../admin/OrderPdf/'.self::PDF_TEMPLATE_FILE_NAME;
+        $templateFilePath = file_exists($userPath) ? $userPath : $originalPath;
         $this->setSourceFile($templateFilePath);
 
         foreach ($ids as $id) {
@@ -292,13 +291,12 @@ class OrderPdfService extends AbstractFPDIService
             $text = 'Email: '.$Help->getLawEmail();
             $this->lfText(125, 83, $text, 8);      // Email
         }
-        // ロゴ画像
-        // app配下のテンプレートファイルを優先して読み込む
-        $logoFilePath = $this->app['config']['root_dir'];
-        $logoFilePath .= '/app/template/admin/OrderPdf/logo.png';
-        if (!file_exists($logoFilePath)) {
-            $logoFilePath =  __DIR__ . '/../Resource/template/admin/OrderPdf/logo.png';
-        }
+
+        // ロゴ画像(app配下のロゴ画像を優先して読み込む)
+        $originalPath = __DIR__.'/../Resource/template/'.self::LOGO_IMG_FILE_NAME;
+        $userPath = $this->app['config']['template_realdir'].'/../admin/OrderPdf/'.self::LOGO_IMG_FILE_NAME;
+        $logoFilePath = file_exists($userPath) ? $userPath : $originalPath;
+//        dump($userPath);exit();
         $this->Image($logoFilePath, 124, 46, 40);
     }
 
