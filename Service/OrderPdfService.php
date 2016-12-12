@@ -292,7 +292,6 @@ class OrderPdfService extends AbstractFPDIService
         $originalPath = __DIR__.'/../Resource/template/'.$logoFile;
         $userPath = $this->app['config']['template_realdir'].'/../admin/OrderPdf/'.$logoFile;
         $logoFilePath = file_exists($userPath) ? $userPath : $originalPath;
-//        dump($userPath);exit();
         $this->Image($logoFilePath, 124, 46, 40);
     }
 
