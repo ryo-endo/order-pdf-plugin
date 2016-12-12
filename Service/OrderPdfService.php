@@ -39,12 +39,6 @@ class OrderPdfService extends AbstractFPDIService
     /** FONT 明朝 */
     const FONT_SJIS = 'kozminproregular';
 
-    /** PDFテンプレートファイル パス */
-    const PDF_TEMPLATE_FILE_NAME = 'nouhinsyo1.pdf';
-
-    /** ロゴ画像テンプレートファイル名 */
-    const LOGO_IMG_FILE_NAME = 'logo.png';
-
     // ====================================
     // 変数宣言
     // ====================================
@@ -157,8 +151,9 @@ class OrderPdfService extends AbstractFPDIService
         $this->setDefaultData($formData);
 
         // テンプレートファイルを読み込む(app配下のテンプレートファイルを優先して読み込む)
-        $originalPath = __DIR__.'/../Resource/template/'.self::PDF_TEMPLATE_FILE_NAME;
-        $userPath = $this->app['config']['template_realdir'].'/../admin/OrderPdf/'.self::PDF_TEMPLATE_FILE_NAME;
+        $pdfFile = $this->app['config']['OrderPdf']['const']['pdf_file'];
+        $originalPath = __DIR__.'/../Resource/template/'.$pdfFile;
+        $userPath = $this->app['config']['template_realdir'].'/../admin/OrderPdf/'.$pdfFile;
         $templateFilePath = file_exists($userPath) ? $userPath : $originalPath;
         $this->setSourceFile($templateFilePath);
 
@@ -293,8 +288,9 @@ class OrderPdfService extends AbstractFPDIService
         }
 
         // ロゴ画像(app配下のロゴ画像を優先して読み込む)
-        $originalPath = __DIR__.'/../Resource/template/'.self::LOGO_IMG_FILE_NAME;
-        $userPath = $this->app['config']['template_realdir'].'/../admin/OrderPdf/'.self::LOGO_IMG_FILE_NAME;
+        $logoFile = $this->app['config']['OrderPdf']['const']['logo_file'];
+        $originalPath = __DIR__.'/../Resource/template/'.$logoFile;
+        $userPath = $this->app['config']['template_realdir'].'/../admin/OrderPdf/'.$logoFile;
         $logoFilePath = file_exists($userPath) ? $userPath : $originalPath;
 //        dump($userPath);exit();
         $this->Image($logoFilePath, 124, 46, 40);
