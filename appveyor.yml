@@ -43,7 +43,8 @@ install:
   - SET PATH=C:\Program Files\MySql\MySQL Server 5.7\bin\;%PATH%
   - cinst php -version 5.6.35 --allow-empty-checksums
   - SET PATH=C:\tools\php56\;%PATH%
-  - dir C:\tools\php
+  - dir C:\
+  - dir C:\tools
   - dir C:\tools\php56
   - copy C:\tools\php56\php.ini-production C:\tools\php\php.ini
   - echo date.timezone="Asia/Tokyo" >> C:\tools\php\php.ini
